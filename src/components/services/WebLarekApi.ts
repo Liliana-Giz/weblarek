@@ -1,6 +1,6 @@
 import { IApi, IOrderRequest, IOrderResponse, IProduct, IProductListResponse } from '../../types';
 
-export class WebLarekApi {
+class WebLarekApi {
     constructor(private readonly api: IApi) {}
 
     // получает каталог товаров

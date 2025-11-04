@@ -127,11 +127,7 @@ export interface IProductListResponse {
   items: IProduct[];
 }
 
-export interface IOrderRequest {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+export interface IOrderRequest extends IBuyer {
   total: number;
   items: string[];
 }
@@ -170,7 +166,7 @@ export interface IOrderResponse {
   - `clear(): void` — очистить корзину.
   - `getTotal(): number` — сумма (null-цены считаются как 0).
   - `getCount(): number` — количество товаров.
-  - `has(id: string): boolean` — проверка наличия товара по id.
+  - `hasItem(id: string): boolean` — проверка наличия товара по id.
 
 ### `Buyer` (`src/components/Models/Buyer.ts`)
 - Назначение: хранение данных покупателя и их валидация.

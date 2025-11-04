@@ -10,7 +10,7 @@ export class Cart {
 
     // добавляет товар в корзину
     add(product: IProduct): void {
-        if (!this.has(product.id)) {
+        if (!this.hasItem(product.id)) {
             this.items = [...this.items, product];
         }
     }
@@ -41,7 +41,7 @@ export class Cart {
     }
 
     // проверяет наличие товара в корзине
-    has(id: string): boolean {
+    hasItem(id: string): boolean {
         return this.items.some((p) => p.id === id);
     }
 }
