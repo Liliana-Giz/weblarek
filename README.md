@@ -194,3 +194,82 @@ export interface IOrderResponse {
 
 В `src/main.ts` создаются экземпляры всех моделей, выполняются тестовые вызовы методов на данных из `src/utils/data.ts`, затем выполняется запрос каталога на сервер и сохранение в модель.
 
+## Слой Представления (View)
+
+Каждый класс отвечает за свой блок разметки и не хранит данных.
+
+- Header (`src/components/View/Header.ts`)
+  - Назначение: кнопка корзины и счётчик товаров.
+  - Поля: `.header__basket`, `.header__basket-counter`.
+  - Методы: `setCounter(count: number)`.
+  - События UI: нажатие по корзине (через обработчик конструктора).
+
+- Modal (`src/components/View/Modal.ts`)
+  - Назначение: показ/скрытие модального окна, подмена контента.
+  - Поля: `.modal`, `.modal__content`, `.modal__close`.
+  - Методы: `setContent(node)`, `open()`, `close()`.
+  - Правила: закрытие по клику вне контейнера и по крестику.
+
+- Gallery (`src/components/View/Gallery.ts`)
+  - Назначение: контейнер каталога.
+  - Методы: `setItems(nodes: HTMLElement[])`.
+
+- CardBase (`src/components/View/CardBase.ts`)
+  - Базовый класс карточек (общие поля title/image/category/price, маппинг `categoryMap`).
+
+- CatalogCard (`src/components/View/CatalogCard.ts`)
+  - Назначение: карточка каталога на главной.
+  - Событие UI: клик по карточке (предпросмотр).
+
+- PreviewCard (`src/components/View/PreviewCard.ts`)
+  - Назначение: детальный просмотр товара в модалке.
+  - Методы: `setBuyState(inCart: boolean, price: number | null)`.
+  - События UI: `onBuy`, `onRemove`.
+
+- BasketItem (`src/components/View/BasketItem.ts`)
+  - Назначение: позиция в корзине.
+  - Поля: индекс, кнопка удаления.
+  - Событие UI: удаление позиции.
+
+- BasketView (`src/components/View/BasketView.ts`)
+  - Назначение: корзина целиком.
+  - Методы: `setItems`, `setTotal`, `setCheckoutEnabled`.
+  - Событие UI: оформление заказа.
+
+- FormBase (`src/components/View/FormBase.ts`)
+  - Общая логика для форм (ошибки, кнопка сабмита).
+
+- OrderForm (`src/components/View/OrderForm.ts`)
+  - Назначение: шаг 1 — выбор оплаты и адрес.
+  - Особенности: модификатор `button_alt-active` для выбранной оплаты.
+  - Методы: `setValid(valid, errorText)`.
+
+- ContactsForm (`src/components/View/ContactsForm.ts`)
+  - Назначение: шаг 2 — контактные данные.
+  - Методы: `setValid(valid, errorText)`.
+
+Замечания по верстке:
+- В модалке используется модификатор `modal_active`.
+- Для категорий карточек применяется `categoryMap` из `src/utils/constants.ts`.
+
+## События приложения
+
+Список событий (см. `AppEvents` в `src/utils/constants.ts`):
+- Модели:
+  - `products:changed` — изменился каталог
+  - `products:selected` — выбран товар для просмотра
+  - `cart:changed` — изменилось содержимое корзины
+  - `buyer:changed` — изменились данные покупателя
+- Представления (UI):
+  - `ui:card-click`, `ui:buy-click`, `ui:cart-remove`, `ui:cart-open`, `ui:checkout`, `ui:goto-contacts`, `ui:pay`, `ui:form-change`, `ui:modal-open`, `ui:modal-close`
+
+## Презентер (main.ts)
+
+- Инициализирует `EventEmitter`, модели (`Products`, `Cart`, `Buyer`) с передачей брокера событий, сервис `WebLarekApi`.
+- На событие `products:changed` рендерит каталог в `.gallery` с помощью `CatalogCard`.
+- На выбор карточки открывает модальное окно с `PreviewCard`, где состояние кнопки зависит от наличия товара в корзине и цены.
+- Кнопка корзины в `Header` открывает модалку с `BasketView`, где можно удалить позиции и перейти к оформлению.
+- Шаг 1 (`OrderForm`) реагирует на изменения полей и валидирует `payment` и `address`.
+- Шаг 2 (`ContactsForm`) валидирует `email` и `phone`. По сабмиту отправляет заказ через `WebLarekApi.createOrder`, показывает `success`, очищает корзину и данные покупателя.
+- Презентер не генерирует события, он только подписывается и координирует действия между слоями.
+

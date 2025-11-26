@@ -1,13 +1,21 @@
 import { IBuyer } from '../../types';
+import { IEvents } from '../base/Events';
+import { AppEvents } from '../../utils/constants';
 
 type ValidationErrors = Partial<Record<keyof IBuyer, string>>;
 
 export class Buyer {
     protected data: Partial<IBuyer> = {};
+    protected events?: IEvents;
+
+    constructor(events?: IEvents) {
+        this.events = events;
+    }
 
     // сохраняет данные покупателя (частично, не затирая остальные поля)
     setData(part: Partial<IBuyer>): void {
         this.data = { ...this.data, ...part };
+        this.events?.emit(AppEvents.BuyerChanged, { data: this.getData() });
     }
 
     // возвращает все текущие данные покупателя
@@ -18,6 +26,7 @@ export class Buyer {
     // очищает все данные покупателя
     clear(): void {
         this.data = {};
+        this.events?.emit(AppEvents.BuyerChanged, { data: this.getData() });
     }
 
     // валидирует поля; если fields не задан, проверяет все

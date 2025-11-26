@@ -20,3 +20,22 @@ export const settings = {
 
 };
 
+// События приложения
+export const AppEvents = {
+  ProductsChanged: 'products:changed',
+  ProductSelected: 'products:selected',
+  CartChanged: 'cart:changed',
+  BuyerChanged: 'buyer:changed',
+  // UI events
+  CardClick: 'ui:card-click',
+  BuyClick: 'ui:buy-click',
+  RemoveFromCartClick: 'ui:cart-remove',
+  OpenCartClick: 'ui:cart-open',
+  CheckoutClick: 'ui:checkout',
+  GoToContactsClick: 'ui:goto-contacts',
+  PayClick: 'ui:pay',
+  FormChange: 'ui:form-change',
+  ModalOpen: 'ui:modal-open',
+  ModalClose: 'ui:modal-close',
+} as const;
+
