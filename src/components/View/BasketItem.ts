@@ -22,9 +22,9 @@ export class BasketItem extends CardBase {
     set index(value: number) {
         this.indexEl.textContent = String(value);
     }
-    override render(data?: Partial<IProduct> & { index?: number }) {
-        if (data?.id) this['idValue'] = data.id;
-        const el = super.render(data);
+    override render(data?: Partial<IProduct> & { index?: number }): HTMLElement {
+        if (data?.id) this.idValue = data.id;
+        const el = super.render(data as Partial<IProduct>);
         if (data?.index !== undefined) this.index = data.index!;
         return el;
     }

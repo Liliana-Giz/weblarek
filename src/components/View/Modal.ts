@@ -44,6 +44,9 @@ export class Modal extends Component<unknown> {
         this.isOpen = false;
         this.events.emit(AppEvents.ModalClose, {});
     }
+    isOpened(): boolean {
+        return this.isOpen;
+    }
 }
 
 export default Modal;

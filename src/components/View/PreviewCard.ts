@@ -34,9 +34,9 @@ export class PreviewCard extends CardBase {
             this.buyBtn.dataset.mode = 'buy';
         }
     }
-    override render(data?: Partial<IProduct> & { inCart?: boolean }) {
-        if (data?.id) this['idValue'] = data.id;
-        const el = super.render(data);
+    override render(data?: Partial<IProduct> & { inCart?: boolean }): HTMLElement {
+        if (data?.id) this.idValue = data.id;
+        const el = super.render(data as Partial<IProduct>);
         if (data) {
             this.setBuyState(Boolean(data.inCart), data.price ?? null);
         }

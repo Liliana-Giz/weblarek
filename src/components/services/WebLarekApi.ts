@@ -1,5 +1,15 @@
 import { IApi, IOrderRequest, IOrderResponse, IProduct, IProductListResponse } from '../../types';
 
+// Формат, который ожидает бэкенд (payment: 'online' | 'cash')
+interface IOrderPayload {
+    payment: 'online' | 'cash';
+    email: string;
+    phone: string;
+    address: string;
+    total: number;
+    items: string[];
+}
+
 class WebLarekApi {
     constructor(private readonly api: IApi) {}
 
@@ -11,7 +21,16 @@ class WebLarekApi {
 
     // отправляет заказ на сервер
     createOrder(order: IOrderRequest): Promise<IOrderResponse> {
-        return this.api.post<IOrderResponse>('/order', order);
+        // Бэкенд ожидает 'online' вместо 'card'
+        const payload: IOrderPayload = {
+            payment: order.payment === 'card' ? 'online' : 'cash',
+            email: order.email,
+            phone: order.phone,
+            address: order.address,
+            total: order.total,
+            items: order.items,
+        };
+        return this.api.post<IOrderResponse>('/order', payload);
     }
 }
 
